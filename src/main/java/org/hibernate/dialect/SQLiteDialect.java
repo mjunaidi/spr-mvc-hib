@@ -12,15 +12,12 @@ package org.hibernate.dialect;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.JDBCException;
 import org.hibernate.dialect.function.AbstractAnsiTrimEmulationFunction;
 import org.hibernate.dialect.function.NoArgSQLFunction;
 import org.hibernate.dialect.function.SQLFunction;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.dialect.function.VarArgsSQLFunction;
-import org.hibernate.exception.*;
-import org.hibernate.exception.spi.SQLExceptionConverter;
 import org.hibernate.exception.spi.TemplatedViolatedConstraintNameExtracter;
 import org.hibernate.exception.spi.ViolatedConstraintNameExtracter;
 import org.hibernate.type.StandardBasicTypes;
@@ -174,39 +171,6 @@ public class SQLiteDialect extends Dialect {
   public String getCurrentTimestampSelectString() {
     return "select current_timestamp";
   }
-
-  private static final int SQLITE_BUSY = 5;
-  private static final int SQLITE_LOCKED = 6;
-  private static final int SQLITE_IOERR = 10;
-  private static final int SQLITE_CORRUPT = 11;
-  private static final int SQLITE_NOTFOUND = 12;
-  private static final int SQLITE_FULL = 13;
-  private static final int SQLITE_CANTOPEN = 14;
-  private static final int SQLITE_PROTOCOL = 15;
-  private static final int SQLITE_TOOBIG = 18;
-  private static final int SQLITE_CONSTRAINT = 19;
-  private static final int SQLITE_MISMATCH = 20;
-  private static final int SQLITE_NOTADB = 26;
- /* @Override
-  public SQLExceptionConverter buildSQLExceptionConverter() {
-    return new SQLExceptionConverter() {
-      @Override
-      public JDBCException convert(SQLException sqlException, String message, String sql) {
-        final int errorCode = JDBCExceptionHelper.extractErrorCode(sqlException);
-        if (errorCode == SQLITE_CONSTRAINT) {
-          final String constraintName = EXTRACTER.extractConstraintName(sqlException);
-          return new ConstraintViolationException(message, sqlException, sql, constraintName);
-        } else if (errorCode == SQLITE_TOOBIG || errorCode == SQLITE_MISMATCH) {
-          return new DataException(message, sqlException, sql);
-        } else if (errorCode == SQLITE_BUSY || errorCode == SQLITE_LOCKED) {
-          return new LockAcquisitionException(message, sqlException, sql);
-        } else if ((errorCode >= SQLITE_IOERR && errorCode <= SQLITE_PROTOCOL) || errorCode == SQLITE_NOTADB) {
-          return new JDBCConnectionException(message, sqlException, sql);
-        }
-        return new GenericJDBCException(message, sqlException, sql);
-      }
-    };
-  }*/
 
   public static final ViolatedConstraintNameExtracter EXTRACTER = new TemplatedViolatedConstraintNameExtracter() {
     public String extractConstraintName(SQLException sqle) {
